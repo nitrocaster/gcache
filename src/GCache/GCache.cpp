@@ -25,10 +25,10 @@ public:
     std::string Hash;
 
 private:
-    std::string_view ConsumeToken(std::string_view &src)
+    std::string_view ConsumeToken(std::string_view &src, bool consumeSpaces = false)
     {
         auto space = src.find_first_of(" \t");
-        if (space == std::string::npos)
+        if (space == std::string::npos || consumeSpaces)
             space = src.length();
         auto token = src.substr(0, space);
         src = Trim(src.substr(space));
@@ -53,7 +53,7 @@ public:
             Hash = ConsumeToken(lv);
             if (Hash.empty())
                 break;
-            std::filesystem::path path = ConsumeToken(lv);
+            std::filesystem::path path = ConsumeToken(lv, true);
             if (path.empty())
                 break;
             return path.lexically_normal();
