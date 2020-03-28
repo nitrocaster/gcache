@@ -9,6 +9,7 @@
 #include <fstream> // std::ifstream, std::ofstream
 #include <algorithm> // std::min
 #include <unordered_map>
+#include <cstdio> // std::printf, std::puts
 
 static std::string_view Trim(std::string_view s)
 {
@@ -16,6 +17,13 @@ static std::string_view Trim(std::string_view s)
     s.remove_prefix(std::min(s.find_first_not_of(trimChars), s.size()));
     s.remove_suffix(std::min(s.size() - s.find_last_not_of(trimChars) - 1, s.size()));
     return s;
+}
+
+template <typename... TArgs>
+static void Log(char const *format, TArgs ...args)
+{
+    std::printf(format, args...);
+    std::puts("");
 }
 
 class CacheEntry
@@ -86,6 +94,7 @@ public:
     
     void Load(char const *root = ".")
     {
+        Log("- loading cache");
         auto path = std::filesystem::path(root) / FileName;
         if (std::filesystem::exists(path))
         {
@@ -94,19 +103,25 @@ public:
             {
                 CacheEntry entry;
                 auto path = entry.Load(ifs).relative_path();
+                Log("* " FPATH, path.c_str());
                 files[path] = entry;
             }
         }
+        Log("* %u files cached", uint32_t(files.size()));
     }
     
     void Update(char const *root = ".")
     {
+        Log("- updating cache");
+        uint32_t ignored{}, checked{}, restored{}, updated{}, new_{};
         namespace fs = std::filesystem;
         for (RecursiveDirectoryIterator rec(root); rec; ++rec)
         {
             auto path = rec.Path().relative_path().lexically_normal();
             if (path.filename().c_str()[0] == '.')
             {
+                Log("* ignoring: " FPATH, path.c_str());
+                ignored++;
                 if (rec.Directory())
                     rec.Skip();
                 continue;
@@ -115,6 +130,8 @@ public:
                 continue;
             if (auto it = files.find(path); it != files.end())
             {
+                Log("* checking: " FPATH, path.c_str());
+                checked++;
                 auto &entry = it->second;
                 // 1. compare timestamps (match => get out)
                 auto ftime = fs::last_write_time(path);
@@ -130,6 +147,8 @@ public:
                 if (hash == entry.Hash)
                 {
                     // 4. match => restore timestamp
+                    Log("* restoring timestamp: " FPATH, path.c_str());
+                    restored++;
                     auto newTime = fs::file_time_type(fs::file_time_type::clock::duration(entry.Timestamp));
                     fs::last_write_time(path, newTime);
                     continue;
@@ -137,6 +156,8 @@ public:
                 else
                 {
                     // 5. else => save new hash and timestamp
+                    Log("* updating: " FPATH, path.c_str());
+                    updated++;
                     entry.Hash = hash;
                     entry.Timestamp = ts;
                     continue;
@@ -144,6 +165,8 @@ public:
             }
             else
             {
+                Log("* new file: " FPATH, path.c_str());
+                new_++;
                 auto &entry = files[path];
                 std::ifstream ifs(path, std::ios::binary);
                 MD5 md5;
@@ -156,10 +179,13 @@ public:
                 continue;
             }
         }
+        Log("- update completed: ignored[%u], checked[%u], restored[%u], updated[%u], new[%u]",
+            ignored, checked, restored, updated, new_);
     }
     
     void Save(char const *root = ".")
     {
+        Log("- saving cache");
         std::ofstream ofs(std::filesystem::path(root) / FileName, std::ios::binary);
         for (auto const &[path, entry] : files)
             entry.Save(ofs, path);
