@@ -10,6 +10,7 @@
 #include <algorithm> // std::min
 #include <unordered_map>
 #include <cstdio> // std::printf, std::puts
+#include <cstring> // std::strchr
 
 static std::string_view Trim(std::string_view s)
 {
@@ -19,9 +20,16 @@ static std::string_view Trim(std::string_view s)
     return s;
 }
 
+static bool Verbose = false;
+
 template <typename... TArgs>
 static void Log(char const *format, TArgs ...args)
 {
+    if (!Verbose)
+    {
+        if (!std::strchr("!-", format[0]))
+            return;
+    }
     std::printf(format, args...);
     std::puts("");
 }
@@ -94,7 +102,7 @@ public:
     
     void Load(char const *root = ".")
     {
-        Log("- loading cache");
+        Log("* loading cache");
         auto path = std::filesystem::path(root) / FileName;
         if (std::filesystem::exists(path))
         {
@@ -112,7 +120,7 @@ public:
     
     void Update(char const *root = ".")
     {
-        Log("- updating cache");
+        Log("* updating cache");
         uint32_t ignored{}, checked{}, restored{}, updated{}, new_{};
         namespace fs = std::filesystem;
         for (RecursiveDirectoryIterator rec(root); rec; ++rec)
@@ -185,15 +193,29 @@ public:
     
     void Save(char const *root = ".")
     {
-        Log("- saving cache");
+        Log("* saving cache");
         std::ofstream ofs(std::filesystem::path(root) / FileName, std::ios::binary);
         for (auto const &[path, entry] : files)
             entry.Save(ofs, path);
     }
 };
 
-int main()
+int main(int argc, char const **argv)
 {
+    switch (argc)
+    {
+    case 1:
+        break;
+    case 2:
+        if (!std::strcmp(argv[1], "--verbose"))
+        {
+            Verbose = true;
+            break;
+        }
+    default:
+        Log("! unrecognized option (only --verbose is available)");
+        return 1;
+    }
     Cache cache;
     cache.Load();
     cache.Update();
