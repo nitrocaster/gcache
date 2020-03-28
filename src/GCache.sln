@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GCache", "GCache/GCache.vcxproj", "{271FC9FE-53D1-40D1-94EF-3C4DBCDF4653}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GCache", "GCache\GCache.vcxproj", "{271FC9FE-53D1-40D1-94EF-3C4DBCDF4653}"
+	ProjectSection(ProjectDependencies) = postProject
+		{86B5A2EE-5345-4374-95BC-890B65BF1562} = {86B5A2EE-5345-4374-95BC-890B65BF1562}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GCacheCore", "GCacheCore/GCacheCore.vcxproj", "{86B5A2EE-5345-4374-95BC-890B65BF1562}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GCacheCore", "GCacheCore\GCacheCore.vcxproj", "{86B5A2EE-5345-4374-95BC-890B65BF1562}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
