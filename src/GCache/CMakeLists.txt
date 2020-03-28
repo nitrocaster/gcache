@@ -9,3 +9,7 @@ set(GC_LIBRARIES
 
 add_executable(GCache ${GC_MAIN_SOURCES})
 target_link_libraries(GCache ${GC_LIBRARIES})
+
+include(GNUInstallDirs)
+set_target_properties(GCache PROPERTIES INSTALL_RPATH "\$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
+
