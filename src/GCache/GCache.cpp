@@ -111,7 +111,7 @@ public:
             {
                 CacheEntry entry;
                 auto path = entry.Load(ifs).relative_path();
-                Log("* " FPATH, path.c_str());
+                Log("*   " FPATH, path.c_str());
                 files[path] = entry;
             }
         }
@@ -128,7 +128,7 @@ public:
             auto path = rec.Path().relative_path().lexically_normal();
             if (path.filename().c_str()[0] == '.')
             {
-                Log("* ignoring: " FPATH, path.c_str());
+                Log("*   ignoring: " FPATH, path.c_str());
                 ignored++;
                 if (rec.Directory())
                     rec.Skip();
@@ -138,7 +138,7 @@ public:
                 continue;
             if (auto it = files.find(path); it != files.end())
             {
-                Log("* checking: " FPATH, path.c_str());
+                Log("*   checking: " FPATH, path.c_str());
                 checked++;
                 auto &entry = it->second;
                 // 1. compare timestamps (match => get out)
@@ -155,7 +155,7 @@ public:
                 if (hash == entry.Hash)
                 {
                     // 4. match => restore timestamp
-                    Log("* restoring timestamp: " FPATH, path.c_str());
+                    Log("*   restoring timestamp: " FPATH, path.c_str());
                     restored++;
                     auto newTime = fs::file_time_type(fs::file_time_type::clock::duration(entry.Timestamp));
                     fs::last_write_time(path, newTime);
@@ -164,7 +164,7 @@ public:
                 else
                 {
                     // 5. else => save new hash and timestamp
-                    Log("* updating: " FPATH, path.c_str());
+                    Log("*   updating: " FPATH, path.c_str());
                     updated++;
                     entry.Hash = hash;
                     entry.Timestamp = ts;
@@ -173,7 +173,7 @@ public:
             }
             else
             {
-                Log("* new file: " FPATH, path.c_str());
+                Log("*   new file: " FPATH, path.c_str());
                 new_++;
                 auto &entry = files[path];
                 std::ifstream ifs(path, std::ios::binary);
