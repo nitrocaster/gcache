@@ -197,6 +197,20 @@ MD5 &MD5::Update(uint8_t const input[], uint32_t length)
 MD5 &MD5::Update(const char input[], uint32_t length)
 { return Update((uint8_t const *)input, length); }
 
+MD5 &MD5::Update(std::istream &src)
+{
+    char buf[BlockSize];
+    while (true)
+    {
+        src.read(buf, BlockSize);
+        auto rsize = src.gcount();
+        if (!rsize)
+            break;
+        Update(buf, int32_t(rsize));
+    }
+    return *this;
+}
+
 // MD5 finalization. Ends an MD5 message-digest operation, writing the
 // the message digest and zeroizing the context.
 MD5 &MD5::Finalize()
@@ -228,6 +242,6 @@ MD5::DigestType::operator std::string() const
     char buf[2*sizeof(Data)+1];
     for (int i = 0; i < sizeof(Data); i++)
         std::snprintf(buf+i*2, sizeof(buf), "%02x", Data[i]);
-    buf[32] = 0;
+    buf[2*sizeof(Data)] = 0;
     return std::string(buf);
 }

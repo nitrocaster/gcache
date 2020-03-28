@@ -7,6 +7,7 @@
 #include "GCacheCore.hpp"
 #include <cstdint>
 #include <string>
+#include <iostream> // std::istream
 
 class GCACHECORE_API MD5
 {
@@ -21,6 +22,7 @@ public:
     MD5() { Init(); }
     MD5 &Update(uint8_t const buf[], uint32_t length);
     MD5 &Update(char const buf[], uint32_t length);
+    MD5 &Update(std::istream &src);
     MD5 &Finalize();
     DigestType Digest() const { return digest; }
 
