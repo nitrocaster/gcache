@@ -101,6 +101,7 @@ public:
     
     void Update(char const *root = ".")
     {
+        namespace fs = std::filesystem;
         for (RecursiveDirectoryIterator rec(root); rec; ++rec)
         {
             auto path = rec.Path().relative_path().lexically_normal();
@@ -112,7 +113,48 @@ public:
             }
             if (rec.Directory())
                 continue;
-            // XXX: process file referenced by 'path'
+            if (auto it = files.find(path); it != files.end())
+            {
+                auto &entry = it->second;
+                // 1. compare timestamps (match => get out)
+                auto ftime = fs::last_write_time(path);
+                int64_t ts = ftime.time_since_epoch().count();
+                if (ts == entry.Timestamp)
+                    continue;
+                // 2. timestamps don't match: calculate new hash                
+                std::ifstream ifs(path, std::ios::binary);
+                MD5 md5;
+                md5.Update(ifs).Finalize();
+                std::string hash = md5.Digest();
+                // 3. compare new hash with the cached one
+                if (hash == entry.Hash)
+                {
+                    // 4. match => restore timestamp
+                    auto newTime = fs::file_time_type(fs::file_time_type::clock::duration(entry.Timestamp));
+                    fs::last_write_time(path, newTime);
+                    continue;
+                }
+                else
+                {
+                    // 5. else => save new hash and timestamp
+                    entry.Hash = hash;
+                    entry.Timestamp = ts;
+                    continue;
+                }
+            }
+            else
+            {
+                auto &entry = files[path];
+                std::ifstream ifs(path, std::ios::binary);
+                MD5 md5;
+                md5.Update(ifs).Finalize();
+                std::string hash = md5.Digest();
+                auto ftime = fs::last_write_time(path);
+                int64_t ts = ftime.time_since_epoch().count();
+                entry.Hash = hash;
+                entry.Timestamp = ts;
+                continue;
+            }
         }
     }
     
