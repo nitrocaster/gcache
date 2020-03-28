@@ -18,5 +18,7 @@ public:
 	void Skip();
 
 private:
+	MSVC_WARN_DISABLE(4251); // class needs to have dll-interface
 	std::filesystem::recursive_directory_iterator impl;
+	MSVC_WARN_RESTORE;
 };
