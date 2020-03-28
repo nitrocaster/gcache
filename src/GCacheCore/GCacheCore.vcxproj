@@ -23,12 +23,14 @@
     <ClInclude Include="..\Common\Platform.hpp" />
     <ClInclude Include="GCacheCore.hpp" />
     <ClInclude Include="MD5.hpp" />
+    <ClInclude Include="RecursiveDirectoryIterator.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Compiler.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MD5.cpp" />
+    <ClCompile Include="RecursiveDirectoryIterator.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

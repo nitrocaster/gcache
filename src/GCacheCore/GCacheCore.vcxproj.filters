@@ -19,6 +19,9 @@
     <ClInclude Include="MD5.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="RecursiveDirectoryIterator.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\Compiler.inl">
@@ -27,6 +30,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MD5.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursiveDirectoryIterator.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
