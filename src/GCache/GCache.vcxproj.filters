@@ -6,4 +6,9 @@
     <Filter Include="include">
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GCache.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

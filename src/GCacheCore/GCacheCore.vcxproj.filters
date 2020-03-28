@@ -6,4 +6,20 @@
     <Filter Include="include">
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\Config.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="GCacheCore.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Platform.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\Compiler.inl">
+      <Filter>include</Filter>
+    </None>
+  </ItemGroup>
 </Project>
