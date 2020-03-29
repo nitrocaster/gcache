@@ -98,13 +98,14 @@ private:
         { return fs::hash_value(p); }
     };
     std::unordered_map<fs::path, CacheEntry, PathHasher> files;
-    bool modified;
+    bool modified = false;
 
 public:
     static constexpr char const *FileName = ".hash_cache.txt";
     
     void Load(char const *root = ".")
     {
+        files.clear();
         Log("* loading cache");
         auto path = fs::path(root) / FileName;
         if (fs::exists(path))
