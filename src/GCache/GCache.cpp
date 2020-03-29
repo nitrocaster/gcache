@@ -100,6 +100,26 @@ private:
     std::unordered_map<fs::path, CacheEntry, PathHasher> files;
     bool modified = false;
 
+    static std::string Hash(fs::path const &path)
+    {
+        std::ifstream ifs(path, std::ios::binary);
+        MD5 md5;
+        md5.Update(ifs).Finalize();
+        return md5.Digest();
+    }
+
+    static int64_t Timestamp(fs::path const &path)
+    {
+        auto ftime = fs::last_write_time(path);
+        return ftime.time_since_epoch().count();
+    }
+
+    static void Timestamp(fs::path const &path, int64_t ts)
+    {
+        auto newTime = fs::file_time_type(fs::file_time_type::clock::duration(ts));
+        fs::last_write_time(path, newTime);
+    }
+
 public:
     static constexpr char const *FileName = ".hash_cache.txt";
     
@@ -140,59 +160,34 @@ public:
             }
             if (rec.Directory())
                 continue;
-            if (auto it = files.find(path); it != files.end())
-            {
-                Log("*   checking: " FPATH, path.c_str());
-                checked++;
-                auto &entry = it->second;
-                // 1. compare timestamps (match => get out)
-                auto ftime = fs::last_write_time(path);
-                int64_t ts = ftime.time_since_epoch().count();
-                if (ts == entry.Timestamp)
-                    continue;
-                // 2. timestamps don't match: calculate new hash                
-                std::ifstream ifs(path, std::ios::binary);
-                MD5 md5;
-                md5.Update(ifs).Finalize();
-                std::string hash = md5.Digest();
-                // 3. compare new hash with the cached one
-                if (hash == entry.Hash)
-                {
-                    // 4. match => restore timestamp
-                    Log("*   restoring timestamp: " FPATH, path.c_str());
-                    restored++;
-                    auto newTime = fs::file_time_type(fs::file_time_type::clock::duration(entry.Timestamp));
-                    fs::last_write_time(path, newTime);
-                    continue;
-                }
-                else
-                {
-                    // 5. else => save new hash and timestamp
-                    Log("*   updating: " FPATH, path.c_str());
-                    updated++;
-                    entry.Hash = hash;
-                    entry.Timestamp = ts;
-                    modified = true;
-                    continue;
-                }
-            }
-            else
+            auto &entry = files[path];
+            if (entry.Hash.empty())
             {
                 Log("*   new file: " FPATH, path.c_str());
                 new_++;
-                auto &entry = files[path];
-                std::ifstream ifs(path, std::ios::binary);
-                MD5 md5;
-                md5.Update(ifs).Finalize();
-                std::string hash = md5.Digest();
-                auto ftime = fs::last_write_time(path);
-                int64_t ts = ftime.time_since_epoch().count();
-                entry.Hash = hash;
-                entry.Timestamp = ts;
-                modified = true;
+                entry.Hash = Hash(path);
+                entry.Timestamp = Timestamp(path);
                 continue;
             }
+            Log("*   checking: " FPATH, path.c_str());
+            checked++;
+            auto ts = Timestamp(path);
+            if (ts == entry.Timestamp)
+                continue;
+            auto hash = Hash(path);
+            if (hash == entry.Hash)
+            {
+                Log("*   restoring timestamp: " FPATH, path.c_str());
+                restored++;
+                Timestamp(path, entry.Timestamp);
+                continue;
+            }
+            Log("*   updating: " FPATH, path.c_str());
+            updated++;
+            entry.Hash = hash;
+            entry.Timestamp = ts;
         }
+        modified = updated || new_;
         Log("- update completed: ignored[%u], checked[%u], restored[%u], updated[%u], new[%u]",
             ignored, checked, restored, updated, new_);
     }
