@@ -98,6 +98,7 @@ private:
         { return fs::hash_value(p); }
     };
     std::unordered_map<fs::path, CacheEntry, PathHasher> files;
+    bool modified;
 
 public:
     static constexpr char const *FileName = ".hash_cache.txt";
@@ -118,6 +119,7 @@ public:
             }
         }
         Log("* %u files cached", uint32_t(files.size()));
+        modified = false;
     }
     
     void Update(char const *root = ".")
@@ -169,6 +171,7 @@ public:
                     updated++;
                     entry.Hash = hash;
                     entry.Timestamp = ts;
+                    modified = true;
                     continue;
                 }
             }
@@ -185,6 +188,7 @@ public:
                 int64_t ts = ftime.time_since_epoch().count();
                 entry.Hash = hash;
                 entry.Timestamp = ts;
+                modified = true;
                 continue;
             }
         }
@@ -194,6 +198,8 @@ public:
     
     void Save(char const *root = ".")
     {
+        if (!modified)
+            return;
         Log("* saving cache");
         std::ofstream ofs(fs::path(root) / FileName, std::ios::binary);
         for (auto const &[path, entry] : files)
