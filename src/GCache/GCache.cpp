@@ -34,6 +34,8 @@ static void Log(char const *format, TArgs ...args)
     std::puts("");
 }
 
+namespace fs = std::filesystem;
+
 class CacheEntry
 {
 public:
@@ -52,7 +54,7 @@ private:
     }
 
 public:
-    std::filesystem::path Load(std::ifstream &fs)
+    fs::path Load(std::ifstream &fs)
     {
         // "912309182 9283109238 git/libschmoo/schmoo.h"
         std::string line = "<empty line>";
@@ -78,7 +80,7 @@ public:
         throw std::runtime_error("unrecognized cache entry: " + line);
     }
 
-    void Save(std::ofstream &fs, std::filesystem::path path) const
+    void Save(std::ofstream &fs, fs::path path) const
     {
         char buf[32];
         std::snprintf(buf, sizeof(buf), "%lld", Timestamp);
@@ -92,10 +94,10 @@ private:
     struct PathHasher
     {
     public:
-        size_t operator()(std::filesystem::path const &p) const
-        { return std::filesystem::hash_value(p); }
+        size_t operator()(fs::path const &p) const
+        { return fs::hash_value(p); }
     };
-    std::unordered_map<std::filesystem::path, CacheEntry, PathHasher> files;
+    std::unordered_map<fs::path, CacheEntry, PathHasher> files;
 
 public:
     static constexpr char const *FileName = ".hash_cache.txt";
@@ -103,8 +105,8 @@ public:
     void Load(char const *root = ".")
     {
         Log("* loading cache");
-        auto path = std::filesystem::path(root) / FileName;
-        if (std::filesystem::exists(path))
+        auto path = fs::path(root) / FileName;
+        if (fs::exists(path))
         {
             std::ifstream ifs(path, std::ios::binary);
             while (ifs.peek(), ifs.good())
@@ -122,7 +124,6 @@ public:
     {
         Log("* updating cache");
         uint32_t ignored{}, checked{}, restored{}, updated{}, new_{};
-        namespace fs = std::filesystem;
         for (RecursiveDirectoryIterator rec(root); rec; ++rec)
         {
             auto path = rec.Path().relative_path().lexically_normal();
@@ -194,7 +195,7 @@ public:
     void Save(char const *root = ".")
     {
         Log("* saving cache");
-        std::ofstream ofs(std::filesystem::path(root) / FileName, std::ios::binary);
+        std::ofstream ofs(fs::path(root) / FileName, std::ios::binary);
         for (auto const &[path, entry] : files)
             entry.Save(ofs, path);
     }
