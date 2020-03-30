@@ -3,6 +3,7 @@
 // Derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm
 
 #include "Common/Config.hpp"
+#include "Common/doctest.h"
 #include "MD5.hpp"
 #include <cstring>
 
@@ -244,4 +245,14 @@ MD5::DigestType::operator std::string() const
         std::snprintf(buf+i*2, sizeof(buf), "%02x", Data[i]);
     buf[2*sizeof(Data)] = 0;
     return std::string(buf);
+}
+
+TEST_CASE("MD5 RotateLeft")
+{
+    CHECK(RotateLeft(0, 0) == 0);
+    CHECK(RotateLeft(0, 1) == 0);
+    CHECK(RotateLeft(1, 0) == 1);
+    CHECK(RotateLeft(1, 1) == 2);
+    CHECK(RotateLeft(1, 2) == 4);
+    CHECK(RotateLeft(1 << 31, 1) == 1);
 }
