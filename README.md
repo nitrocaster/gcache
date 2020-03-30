@@ -14,9 +14,10 @@ itself is stored in `.hash_cache.txt`.
 git clone https://github.com/nitrocaster/gcache.git
 cd gcache
 mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX="../pkg/" ..
+cmake -DCMAKE_INSTALL_PREFIX="../pkg/" -DBUILD_TESTING=1 ..
 cmake --build . --config Release
 cmake --install .
+ctest -C Release
 ```
 Once done, binaries can be found in `pkg/bin`.
 
@@ -26,7 +27,8 @@ To build with ninja on Windows, run the following commands in
 git clone https://github.com/nitrocaster/gcache.git
 cd gcache
 mkdir build && cd build
-cmake -GNinja -DCMAKE_INSTALL_PREFIX="../pkg/" ..
+cmake -GNinja -DCMAKE_INSTALL_PREFIX="../pkg/" -DBUILD_TESTING=1 ..
 cmake --build . --config Release
 cmake --install .
+ctest -C Release
 ```
