@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(GCache)
 
-option(GC_CORE_TESTING "Build GCacheCore test" OFF)
+option(BUILD_TESTING "Build tests" OFF)
 
 add_compile_options("$<$<CONFIG:DEBUG>:-DDEBUG>")
 add_compile_options("$<$<CONFIG:RELEASE>:-DNDEBUG>")
