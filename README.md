@@ -14,6 +14,7 @@ itself is stored in `.hash_cache.txt`.
 git clone https://github.com/nitrocaster/gcache.git
 cd gcache
 mkdir build && cd build
+conan install ..
 cmake -DCMAKE_INSTALL_PREFIX="../pkg/" -DBUILD_TESTING=1 ..
 cmake --build . --config Release
 cmake --install .
@@ -27,6 +28,7 @@ To build with ninja on Windows, run the following commands in
 git clone https://github.com/nitrocaster/gcache.git
 cd gcache
 mkdir build && cd build
+conan install ..
 cmake -GNinja -DCMAKE_INSTALL_PREFIX="../pkg/" -DBUILD_TESTING=1 ..
 cmake --build . --config Release
 cmake --install .
