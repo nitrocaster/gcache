@@ -11,6 +11,11 @@
 
 namespace GCache
 {
+namespace Detail
+{
+uint32_t RotateLeft(uint32_t x, int n);
+}
+
 class GCACHECORE_API MD5
 {
 public:

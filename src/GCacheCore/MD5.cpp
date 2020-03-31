@@ -3,7 +3,6 @@
 // Derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm
 
 #include "Common/Config.hpp"
-#include <doctest/doctest.h>
 #include "MD5.hpp"
 #include <cstring>
 
@@ -38,20 +37,23 @@ static uint32_t H(uint32_t x, uint32_t y, uint32_t z)
 static uint32_t I(uint32_t x, uint32_t y, uint32_t z)
 { return y^(x | ~z); }
 
-static uint32_t RotateLeft(uint32_t x, int n)
+namespace Detail
+{
+uint32_t RotateLeft(uint32_t x, int n)
 { return x << n | x >> (32-n); }
+} // namespace Detail
 
 static void FF(uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac)
-{ a = RotateLeft(a + F(b, c, d) + x + ac, s) + b; }
+{ a = Detail::RotateLeft(a + F(b, c, d) + x + ac, s) + b; }
 
 static void GG(uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac)
-{ a = RotateLeft(a + G(b, c, d) + x + ac, s) + b; }
+{ a = Detail::RotateLeft(a + G(b, c, d) + x + ac, s) + b; }
 
 static void HH(uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac)
-{ a = RotateLeft(a + H(b, c, d) + x + ac, s) + b; }
+{ a = Detail::RotateLeft(a + H(b, c, d) + x + ac, s) + b; }
 
 static void II(uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac)
-{ a = RotateLeft(a + I(b, c, d) + x + ac, s) + b; }
+{ a = Detail::RotateLeft(a + I(b, c, d) + x + ac, s) + b; }
 
 void MD5::Init()
 {
@@ -247,15 +249,5 @@ MD5::DigestType::operator std::string() const
         std::snprintf(buf+i*2, sizeof(buf), "%02x", Data[i]);
     buf[2*sizeof(Data)] = 0;
     return std::string(buf);
-}
-
-TEST_CASE("MD5 RotateLeft")
-{
-    CHECK(RotateLeft(0, 0) == 0);
-    CHECK(RotateLeft(0, 1) == 0);
-    CHECK(RotateLeft(1, 0) == 1);
-    CHECK(RotateLeft(1, 1) == 2);
-    CHECK(RotateLeft(1, 2) == 4);
-    CHECK(RotateLeft(1 << 31, 1) == 1);
 }
 } // namespace GCache

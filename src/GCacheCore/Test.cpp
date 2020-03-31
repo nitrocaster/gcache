@@ -10,6 +10,15 @@
 
 namespace GCache
 {
+TEST_CASE("MD5 RotateLeft")
+{
+    CHECK(Detail::RotateLeft(0, 0) == 0);
+    CHECK(Detail::RotateLeft(0, 1) == 0);
+    CHECK(Detail::RotateLeft(1, 0) == 1);
+    CHECK(Detail::RotateLeft(1, 1) == 2);
+    CHECK(Detail::RotateLeft(1, 2) == 4);
+    CHECK(Detail::RotateLeft(1 << 31, 1) == 1);
+}
 
 TEST_CASE("MD5::DigestType to string")
 {
