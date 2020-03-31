@@ -16,6 +16,9 @@ endif()
 
 enable_testing()
 
+include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+conan_basic_setup(TARGETS)
+
 add_subdirectory(src/Common)
 add_subdirectory(src/GCache)
 add_subdirectory(src/GCacheCore)

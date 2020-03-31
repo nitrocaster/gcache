@@ -3,7 +3,7 @@
 #include "MD5.hpp"
 #include "RecursiveDirectoryIterator.hpp"
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "Common/doctest.h"
+#include <doctest/doctest.h>
 #include <filesystem>
 #include <unordered_map>
 #include <vector>

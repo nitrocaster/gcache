@@ -3,7 +3,7 @@
 // Derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm
 
 #include "Common/Config.hpp"
-#include "Common/doctest.h"
+#include <doctest/doctest.h>
 #include "MD5.hpp"
 #include <cstring>
 

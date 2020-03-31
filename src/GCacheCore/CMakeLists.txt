@@ -16,6 +16,7 @@ target_compile_definitions(GCacheCore PRIVATE
 target_include_directories(GCacheCore PUBLIC "../")
 target_compile_features(GCacheCore PUBLIC cxx_std_17)
 set_target_properties(GCacheCore PROPERTIES CXX_VISIBILITY_PRESET hidden)
+target_link_libraries(GCacheCore PRIVATE CONAN_PKG::doctest)
 
 install(TARGETS GCacheCore)
 
@@ -30,5 +31,6 @@ if(BUILD_TESTING)
     )
     target_include_directories(GCacheCoreTest PRIVATE "../")
     target_compile_features(GCacheCoreTest PRIVATE cxx_std_17)
+    target_link_libraries(GCacheCoreTest PRIVATE CONAN_PKG::doctest)
     add_test(NAME GCacheCore COMMAND $<TARGET_FILE:GCacheCoreTest>)
 endif()

@@ -1,0 +1,9 @@
+[requires]
+
+[build_requires]
+doctest/2.3.4@bincrafters/stable
+
+[generators]
+cmake
+
+[options]
