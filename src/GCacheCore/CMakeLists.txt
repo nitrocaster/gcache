@@ -21,6 +21,7 @@ target_link_libraries(GCacheCore PRIVATE CONAN_PKG::doctest)
 install(TARGETS GCacheCore)
 
 if(BUILD_TESTING)
+    include("${CONAN_DOCTEST_ROOT}/lib/cmake/doctest/doctest.cmake")
     set(GC_CORE_TEST_SOURCES
         ${GC_CORE_SOURCES}
         Test.cpp
@@ -32,5 +33,5 @@ if(BUILD_TESTING)
     target_include_directories(GCacheCoreTest PRIVATE "../")
     target_compile_features(GCacheCoreTest PRIVATE cxx_std_17)
     target_link_libraries(GCacheCoreTest PRIVATE CONAN_PKG::doctest)
-    add_test(NAME GCacheCore COMMAND $<TARGET_FILE:GCacheCoreTest>)
+    doctest_discover_tests(GCacheCoreTest)
 endif()
