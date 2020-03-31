@@ -14,10 +14,10 @@ class GCACHECORE_API RecursiveDirectoryIterator
 public:
 	RecursiveDirectoryIterator(std::filesystem::path path);
 	RecursiveDirectoryIterator &operator++();
-	operator bool() const;
-	std::filesystem::path Path() const;
+	operator bool() const noexcept;
+	std::filesystem::path Path() const noexcept;
 	bool Directory() const;
-	void Skip();
+	void Skip() noexcept;
 
 private:
 	MSVC_WARN_DISABLE(4251); // class needs to have dll-interface

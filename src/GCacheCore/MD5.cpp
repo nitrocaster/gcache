@@ -55,7 +55,7 @@ static void HH(uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint
 static void II(uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac)
 { a = Detail::RotateLeft(a + I(b, c, d) + x + ac, s) + b; }
 
-void MD5::Init()
+void MD5::Init() noexcept
 {
     finalized = false;
     count[0] = 0;
@@ -67,7 +67,7 @@ void MD5::Init()
 }
 
 // decodes input (unsigned char) into output (uint32_t). Assumes len is a multiple of 4.
-void MD5::Decode(uint32_t output[], uint8_t const input[], uint32_t len)
+void MD5::Decode(uint32_t output[], uint8_t const input[], uint32_t len) noexcept
 {
     for (uint32_t i = 0, j = 0; j < len; i++, j += 4)
     {
@@ -80,7 +80,7 @@ void MD5::Decode(uint32_t output[], uint8_t const input[], uint32_t len)
 
 // encodes input (uint32_t) into output (unsigned char). Assumes len is
 // a multiple of 4.
-void MD5::Encode(uint8_t output[], uint32_t const input[], uint32_t len)
+void MD5::Encode(uint8_t output[], uint32_t const input[], uint32_t len) noexcept
 {
     for (uint32_t i = 0, j = 0; j < len; i++, j += 4)
     {
@@ -91,7 +91,7 @@ void MD5::Encode(uint8_t output[], uint32_t const input[], uint32_t len)
     }
 }
 
-void MD5::TransformBlock(uint8_t const block[BlockSize])
+void MD5::TransformBlock(uint8_t const block[BlockSize]) noexcept
 {
     uint32_t a = state[0], b = state[1], c = state[2], d = state[3], x[16];
     Decode(x, block, BlockSize);
@@ -171,7 +171,7 @@ void MD5::TransformBlock(uint8_t const block[BlockSize])
     std::memset(x, 0, sizeof(x));
 }
 
-MD5 &MD5::Update(uint8_t const input[], uint32_t length)
+MD5 &MD5::Update(uint8_t const input[], uint32_t length) noexcept
 {
     // compute number of bytes mod 64
     uint32_t index = count[0]/8 % BlockSize;
@@ -199,7 +199,7 @@ MD5 &MD5::Update(uint8_t const input[], uint32_t length)
     return *this;
 }
 
-MD5 &MD5::Update(const char input[], uint32_t length)
+MD5 &MD5::Update(const char input[], uint32_t length) noexcept
 { return Update((uint8_t const *)input, length); }
 
 MD5 &MD5::Update(std::istream &src)
@@ -218,7 +218,7 @@ MD5 &MD5::Update(std::istream &src)
 
 // MD5 finalization. Ends an MD5 message-digest operation, writing the
 // the message digest and zeroizing the context.
-MD5 &MD5::Finalize()
+MD5 &MD5::Finalize() noexcept
 {
     static uint8_t const padding[64] = {0x80};
     if (!finalized)
