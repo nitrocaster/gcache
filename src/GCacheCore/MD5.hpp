@@ -9,6 +9,8 @@
 #include <string>
 #include <iostream> // std::istream
 
+namespace GCache
+{
 class GCACHECORE_API MD5
 {
 public:
@@ -40,3 +42,4 @@ private:
     uint32_t state[4];
     DigestType digest;
 };
+} // namespace GCache

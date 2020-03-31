@@ -8,6 +8,9 @@
 #include <unordered_map>
 #include <vector>
 
+namespace GCache
+{
+
 TEST_CASE("MD5::DigestType to string")
 {
     MD5::DigestType digest
@@ -103,3 +106,4 @@ TEST_CASE("RecursiveDirectoryIterator")
     }
     fs::remove_all(root);
 }
+} // namespace GCache

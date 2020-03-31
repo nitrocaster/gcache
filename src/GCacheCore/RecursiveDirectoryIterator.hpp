@@ -7,6 +7,8 @@
 #include "GCacheCore.hpp"
 #include <filesystem>
 
+namespace GCache
+{
 class GCACHECORE_API RecursiveDirectoryIterator
 {
 public:
@@ -22,3 +24,4 @@ private:
 	std::filesystem::recursive_directory_iterator impl;
 	MSVC_WARN_RESTORE;
 };
+} // namespace GCache

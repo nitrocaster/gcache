@@ -4,6 +4,8 @@
 #include "Common/Config.hpp"
 #include "RecursiveDirectoryIterator.hpp"
 
+namespace GCache
+{
 namespace fs = std::filesystem;
 
 RecursiveDirectoryIterator::operator bool() const
@@ -27,3 +29,4 @@ RecursiveDirectoryIterator &RecursiveDirectoryIterator::operator++()
     ++impl;
     return *this;
 }
+} // namespace GCache

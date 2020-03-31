@@ -7,6 +7,8 @@
 #include "MD5.hpp"
 #include <cstring>
 
+namespace GCache
+{
 static constexpr auto S11 = 7;
 static constexpr auto S12 = 12;
 static constexpr auto S13 = 17;
@@ -256,3 +258,4 @@ TEST_CASE("MD5 RotateLeft")
     CHECK(RotateLeft(1, 2) == 4);
     CHECK(RotateLeft(1 << 31, 1) == 1);
 }
+} // namespace GCache

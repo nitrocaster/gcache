@@ -12,6 +12,8 @@
 #include <cstdio> // std::printf, std::puts
 #include <cstring> // std::strchr
 
+namespace GCache
+{
 static std::string_view Trim(std::string_view s)
 {
     char const *trimChars = " \"\t\r\v\n";
@@ -203,8 +205,11 @@ public:
     }
 };
 
+} // namespace GCache
+
 int main(int argc, char const **argv)
 {
+    using namespace GCache;
     switch (argc)
     {
     case 1:
