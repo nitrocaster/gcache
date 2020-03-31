@@ -16,6 +16,10 @@ endif()
 
 enable_testing()
 
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    message(FATAL_ERROR "Run 'conan install ..' from 'build' directory")
+endif()
+
 include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
 conan_basic_setup(TARGETS)
 
