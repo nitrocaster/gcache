@@ -5,7 +5,7 @@ set(GC_CORE_SOURCES
     RecursiveDirectoryIterator.cpp
     RecursiveDirectoryIterator.hpp
 )
-source_group(src FILES ${GC_CORE_SRC})
+source_group(src FILES ${GC_CORE_SOURCES})
 
 add_library(GCacheCoreObj OBJECT ${GC_CORE_SOURCES})
 
