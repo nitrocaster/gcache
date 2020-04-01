@@ -8,6 +8,12 @@ rebasing in a git repository.
 Files and directories which names start with dot are ignored. The cache
 itself is stored in `.hash_cache.txt`.
 
+## Prerequisites
+
+- C++17 compiler (tested with GCC 9.1 and MSVC 19.25)
+- [CMake](https://cmake.org) 3.16+
+- [Conan](https://conan.io)
+
 ## Installation
 
 ```
