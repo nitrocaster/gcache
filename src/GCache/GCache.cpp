@@ -163,7 +163,7 @@ public:
                 }
             }
         }
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             Reset();
             Log("! error while loading cache: %s", e.what());
@@ -219,7 +219,7 @@ public:
                 updated++;
             }            
         }
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             Reset();
             Log("! error while updating cache: %s", e.what());
@@ -241,7 +241,7 @@ public:
             for (auto const &[path, entry] : files)
                 entry.Save(ofs, path);
         }
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             Reset();
             Log("! error while saving cache: %s", e.what());

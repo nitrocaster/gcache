@@ -26,10 +26,10 @@ static constexpr auto S43 = 15;
 static constexpr auto S44 = 21;
 
 static uint32_t F(uint32_t x, uint32_t y, uint32_t z)
-{ return x&y | ~x&z; }
+{ return (x&y) | (~x&z); }
 
 static uint32_t G(uint32_t x, uint32_t y, uint32_t z)
-{ return x&z | y&~z; }
+{ return (x&z) | (y&~z); }
 
 static uint32_t H(uint32_t x, uint32_t y, uint32_t z)
 { return x^y^z; }
@@ -245,7 +245,7 @@ MD5 &MD5::Finalize() noexcept
 MD5::DigestType::operator std::string() const
 {
     char buf[2*sizeof(Data)+1];
-    for (int i = 0; i < sizeof(Data); i++)
+    for (uint32_t i = 0; i < sizeof(Data); i++)
         std::snprintf(buf+i*2, sizeof(buf), "%02x", Data[i]);
     buf[2*sizeof(Data)] = 0;
     return std::string(buf);
